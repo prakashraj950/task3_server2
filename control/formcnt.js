@@ -27,9 +27,9 @@ const form_set_db = new FormSetDb(con);
     })
   }
 
-  export async function storeData(data,){
-    let stmt = "INSERT INTO services SET ?";
-    con.query(stmt,form_data,(err,res)=>{
+  export async function storeData(data){
+    let stmt = "INSERT INTO services SET ? ";
+    con.query(stmt,data,(err,res)=>{
         if(err) throw err;
     })
 }

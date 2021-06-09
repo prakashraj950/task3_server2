@@ -1,5 +1,5 @@
 import express from 'express';
-import{fetchData, getId} from '../control/formcnt.js'
+import{fetchData, getId,storeData} from '../control/formcnt.js'
 export default async function installHandler(app){
     
     
@@ -9,9 +9,18 @@ export default async function installHandler(app){
       try{  
       const result = await fetchData();
       const id = await getId(req.body.page_name);
-      storeData(req.body)
+      const service = {
+        Ad_id: result.id,
+        domain_id: req.body.domain_id,
+        user: req.body.user,
+        ip_address: req.body.ip_address,
+        page_id: id,
+        clicked:0};
+        storeData(service)
       res.send(result.file);
-      }catch(err){
+    }
+      
+      catch(err){
         res.send(err)
       }
       });
