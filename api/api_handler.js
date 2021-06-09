@@ -1,5 +1,5 @@
 import express from 'express';
-import{fetchData, getId,storeData} from '../control/formcnt.js'
+import{clickUpdate, fetchData, getId,storeData} from '../control/formcnt.js'
 export default async function installHandler(app){
     
     
@@ -16,12 +16,21 @@ export default async function installHandler(app){
         ip_address: req.body.ip_address,
         page_id: id,
         clicked:0};
-        storeData(service)
-      res.send(result.file);
+       const service_id = await storeData(service);
+       const file_name = result.file;
+      res.send({file_name,service_id});
     }
       
       catch(err){
         res.send(err)
       }
       });
-}
+
+      app.post('/click',(req,res)=>{
+        console.log(req.body);
+       clickUpdate(req.body.service_id)
+      })
+
+
+
+    }

@@ -16,7 +16,7 @@ const form_set_db = new FormSetDb(con);
     })
   }
   export  function getId(page_name){
-    let stmt = "SELECT id FROM page WHERE name= ?"
+    let stmt = "SELECT id FROM page WHERE STRCMP (name, ?)=0"
     return new Promise ( (resolve, reject) => {
       con.query(stmt,[page_name],(err,r)=>{ 
           if (err) reject(err);
@@ -27,10 +27,21 @@ const form_set_db = new FormSetDb(con);
     })
   }
 
-  export async function storeData(data){
+  export  function storeData(data){
     let stmt = "INSERT INTO services SET ? ";
-    con.query(stmt,data,(err,res)=>{
-        if(err) throw err;
+   return new Promise((resolve, reject) => {
+      con.query(stmt,data,(err,res)=>{
+        if(err) reject(err);
+        else resolve(res.insertId);
+      })
+    })
+    
+}
+
+export async function clickUpdate(id){
+    let stmt = "UPDATE services SET clicked=1 WHERE id= ?";
+    con.query(stmt,[id],(err,r)=>{
+      if (err) throw err;
     })
 }
   
