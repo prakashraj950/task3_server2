@@ -1,3 +1,4 @@
+import e from 'express';
 import connectDatabase from '../database/db_connection.js';
 const con = connectDatabase();
 
@@ -6,7 +7,7 @@ export async function Login(domain_name,password){
   let stmt = "SELECT id FROM  WHERE STRCMP (name, ?)=0"
   return new Promise ( (resolve, reject) => {
     con.query(stmt,[domain_name],(err,r)=>{ 
-        if (err) reject({status: "success"});
+        if (err) reject({status: "failed"});
         else if (r.length == 1)  resolve({status: "success"});
 
     })
@@ -80,5 +81,73 @@ export function getAdId(domain, page, age_group, city) {
       else reject("no ad exists");
     });
   });
+};
+
+
+export  function insertId(){
+  let stmt = "INSERT INTO ads SET file = '' ";
+ return new Promise((resolve, reject) => {
+    con.query(stmt,(err,res)=>{
+      if(err) reject(err);
+      else resolve(res.insertId);
+    })
+  })
+  }
+
+  export async function fileUpdate(id,data){
+    let stmt = "UPDATE ads SET ? WHERE id= ?";
+     con.query(stmt,[data,id],(err,r)=>{
+        if (err) throw err;
+        else return r
+    })
+};
+
+export  function adIdCheck(id){
+  let stmt = "SELECT 1 FROM ads WHERE id = ? "
+ return new Promise((resolve, reject) => {
+    con.query(stmt,id,(err,res)=>{
+      if(err) reject(err);
+      else if(res.length === 0) {
+        resolve(false)
+      } else if( res.length === 1) resolve (true)
+      else reject('invalid data in ads table')
+    })
+  })
+  }
+
+
+  export  function labelDataStore(data){
+  let stmt = "INSERT INTO ad_label SET ? ";
+  if(adIdCheck(data.Ad_id)){
+    return new Promise((resolve, reject) => {
+    con.query(stmt,[data],(err,res)=>{
+      if(err) reject(err);
+      else resolve("successfully inserted");
+    })
+  })
+  }else resolve ('invalid data in ads table')
+ 
 }
-  
+export  function customDataStore(data){
+  let stmt = "INSERT INTO ad_custom SET ? ";
+  if(adIdCheck(data.Ad_id)){
+    return new Promise((resolve, reject) => {
+    con.query(stmt,[data],(err,res)=>{
+      if(err) reject(err);
+      else resolve("successfully inserted");
+    })
+  })
+  }else resolve ('invalid data in ads table')
+ 
+}
+export  function domainId(domain_name){
+  let stmt = "SELECT id FROM Domain WHERE STRCMP (name, ?)=0"
+  return new Promise ( (resolve, reject) => {
+    con.query(stmt,[domain_name],(err,r)=>{ 
+        if (err) reject(err);
+        else if (r.length === 1)  resolve(r[0].id);
+        else reject();
+      
+      });
+  })
+}
