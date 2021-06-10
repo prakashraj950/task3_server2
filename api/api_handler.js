@@ -1,10 +1,20 @@
 import express from 'express';
-import{clickUpdate, fetchData, getId,storeData,getAdId} from '../control/formcnt.js'
+import{clickUpdate, fetchData, getId,storeData,getAdId,Login} from '../control/formcnt.js'
 export default async function installHandler(app){
     
     
     app.use(express.json());
     app.use('/ads',express.static('./ads'));
+    app.post('/login',async(req,res)=>{
+      try{
+      const result = await Login(req.body.domain_name,req.body.password)
+      res.send(result)
+      console.log(result)
+      }catch(err){
+        res.send(err)
+      }
+  
+  })
     app.post('/ad', async (req, res) => {
       try {
         const domain_id = req.body.domain_id;

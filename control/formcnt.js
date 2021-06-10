@@ -1,7 +1,17 @@
 import connectDatabase from '../database/db_connection.js';
 const con = connectDatabase();
 
+export async function Login(domain_name,password){ 
+  console.log(domain_name,password);
+  let stmt = "SELECT id FROM  WHERE STRCMP (name, ?)=0"
+  return new Promise ( (resolve, reject) => {
+    con.query(stmt,[domain_name],(err,r)=>{ 
+        if (err) reject({status: "success"});
+        else if (r.length == 1)  resolve({status: "success"});
 
+    })
+  })
+}
 
 export function fetchData(id) {
   let stmt = "SELECT * FROM ads WHERE id = ?";
