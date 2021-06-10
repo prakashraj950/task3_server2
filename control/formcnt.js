@@ -137,7 +137,7 @@ export  function customDataStore(data){
       else resolve("successfully inserted");
     })
   })
-  }else resolve ('invalid data in ads table')
+  }else throw ('invalid data in ads table')
  
 }
 export  function domainId(domain_name){

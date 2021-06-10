@@ -21,7 +21,7 @@ export default async function installHandler(app){
   
   })
   app.post('/custom',async(req,res)=>{
-    try{const domain_id = domainId(req.body.domain_name)
+    try{const domain_id = await domainId(req.body.domain_name)
     const custom ={
      Ad_id : req.body.data.Ad_id,
      Domain_id : domain_id,
