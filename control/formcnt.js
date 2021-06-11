@@ -4,15 +4,65 @@ const con = connectDatabase();
 
 export async function Login(domain_name,password){ 
   console.log(domain_name,password);
-  let stmt = "SELECT id FROM  WHERE STRCMP (name, ?)=0"
+  let stmt = "SELECT id FROM Domain WHERE STRCMP (name, ?)=0"
   return new Promise ( (resolve, reject) => {
     con.query(stmt,[domain_name],(err,r)=>{ 
+      console.log(r,err);
         if (err) reject({status: "failed"});
         else if (r.length == 1)  resolve({status: "success"});
 
     })
   })
 }
+
+export async function ServeData(data){
+  let stmt = "SELECT * FROM services WHERE domain_id = ?"
+ const params = [ data.domain_id ];
+if ("age_group" in data) {
+  stmt += "\nAND age_group = ?";
+  params.push(data.age_group);
+}
+if ("city" in data) {
+  stmt += "\nAND STRCMP (city , ?)=0";
+  params.push(data.city);
+}
+  return new Promise ( (resolve, reject) => {
+    con.query(stmt,params,(err,r)=>{ 
+        if (err) reject(err);
+        else resolve(r)
+
+})
+  })
+}
+
+
+
+
+
+
+
+
+
+
+
+
+//delete row
+export async function Delete(tablename,id){
+  let stmt= `DELETE FROM ${tablename} WHERE Ad_id = ${id}`;
+  con.query(stmt,(err,r)=>{
+    if (err) reject(err);
+    
+  })
+}
+export async function DeleteAd(id){
+  let stmt= "DELETE FROM ads WHERE id = ?";
+  con.query(stmt,[id],(err,r)=>{
+    if (err) reject(err);
+    
+  })
+}
+
+
 
 export function fetchData(id) {
   let stmt = "SELECT * FROM ads WHERE id = ?";
@@ -24,6 +74,41 @@ export function fetchData(id) {
     });
   });
 }
+export async function fetchCustom(domain_name,id) {
+  const domain_id = await (domainId(domain_name));
+let stmt = "SELECT * FROM ad_custom WHERE Ad_id = ? AND Domain_id = ?";
+return new Promise( (resolve, reject) => {
+    con.query(stmt, [id,domain_id], (err, r) => {
+      if (err) reject(err);
+      else   resolve(r);
+      
+    });
+  });
+}
+
+
+
+export function fetchLabel(id) {
+  let stmt = "SELECT * FROM ad_label WHERE Ad_id = ?";
+  return new Promise( (resolve, reject) => {
+    con.query(stmt, [id], (err, r) => {
+      if (err) reject(err);
+      else  resolve(r);
+      
+    });
+  });
+}
+
+export function getads() {
+  let stmt = "SELECT * FROM ads ";
+  return new Promise( (resolve, reject) => {
+    con.query(stmt,(err, r) => {
+      if (err) reject(err);
+      else  resolve(r);
+    });
+  });
+}
+
   export  function getId(page_name){
     let stmt = "SELECT id FROM page WHERE STRCMP (name, ?)=0"
     return new Promise ( (resolve, reject) => {
@@ -125,7 +210,7 @@ export  function adIdCheck(id){
       else resolve("successfully inserted");
     })
   })
-  }else resolve ('invalid data in ads table')
+  }else throw ('invalid data in ads table')
  
 }
 export  function customDataStore(data){

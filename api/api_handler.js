@@ -1,7 +1,8 @@
 import express from 'express';
 import fileUpload from 'express-fileupload';
 import path from 'path';
-import{clickUpdate, fetchData, getId,storeData,getAdId,Login,insertId,fileUpdate, labelDataStore,customDataStore,domainId} from '../control/formcnt.js'
+import{clickUpdate, fetchData, getId,storeData,getAdId,Login,insertId,fileUpdate, 
+labelDataStore,customDataStore,domainId,getads,fetchCustom,fetchLabel, Delete, DeleteAd, ServeData} from '../control/formcnt.js'
 const __dirname = path.resolve();
 export default async function installHandler(app){
     
@@ -13,13 +14,70 @@ export default async function installHandler(app){
     app.post('/login',async(req,res)=>{
       try{
       const result = await Login(req.body.domain_name,req.body.password)
+      console.log({result})
       res.send(result)
-      console.log(result)
       }catch(err){
         res.send(err)
       }
   
   })
+
+
+app.post('/servedata', async(req,res)=>{
+  try{
+    console.log(req.body.data);
+    req.body.data.domain_id = await domainId(req.body.data.domain_name)
+console.log(req.body.data.domain_id);
+    const result = await ServeData(req.body.data)
+    res.send(result)
+  }catch(err){
+    res.status(400).send(err);
+    console.log(err);
+  }
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  //delete
+  app.post('/delete',async(req,res)=>{
+     await Delete(req.body.Labeltable,req.body.id);
+     await Delete(req.body.Customtable,req.body.id);
+      await DeleteAd(req.body.id);
+      res.send("deleted")
+  })
+
+  app.post('/getdata',async(req,res)=>{
+    console.log(req.body);
+    const ads_row = await fetchData(req.body.Ad_id);
+    const custom_row =await fetchCustom(req.body.domain_name,req.body.Ad_id);
+    const label_row = await fetchLabel(req.body.Ad_id);
+    console.log(ads_row,custom_row,label_row);
+    res.send({ads_row,custom_row,label_row})
+  })
+
+  app.get('/getads',async(req,res)=>{
+    const ad_data = await getads();
+    res.send(ad_data);
+  })
+
   app.post('/custom',async(req,res)=>{
     try{const domain_id = await domainId(req.body.domain_name)
     const custom ={
