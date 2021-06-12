@@ -27,7 +27,6 @@ app.post('/servedata', async(req,res)=>{
   try{
     console.log(req.body.data);
     req.body.data.domain_id = await domainId(req.body.data.domain_name)
-console.log(req.body.data.domain_id);
     const result = await ServeData(req.body.data)
     res.send(result)
   }catch(err){
@@ -35,21 +34,6 @@ console.log(req.body.data.domain_id);
     console.log(err);
   }
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -90,16 +74,17 @@ console.log(req.body.data.domain_id);
   });
 
   app.post('/upload', async(req,res)=>{
-      try{
+    if (!req.files || Object.keys(req.files).length === 0) {
+          console.log("no files were upload")
+        return res.status(400).send('No files were uploaded.');
+      }
+      for(const sampleFile of req.files.file){
+    try{
+        console.log(req.files.file);
         let uploadPath;
         const id = await insertId();
         console.log(id);
-        if (!req.files || Object.keys(req.files).length === 0) {
-          console.log("no files were upload")
-        return res.status(400).send('No files were uploaded.');
         
-      }
-       const sampleFile = req.files.file;
        const file_name = sampleFile.name.split(".");
        const file_ext = file_name[file_name.length-1];
       uploadPath = __dirname + `/ads/${id}`+ "."+file_ext;
@@ -116,11 +101,13 @@ console.log(req.body.data.domain_id);
      } catch (error) {
       console.log(error);   
      }
-       res.send("file uploaded")
+       
       } catch (err) {
-       res.send(`file not uploaded.${err}`)} 
+      console.log(`file not uploaded.${err}`);} 
      
-    });
+    }
+    res.send("file uploaded")
+  })
   
      app.post('/label',async(req,res)=>{
        try{

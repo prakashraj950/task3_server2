@@ -22,9 +22,21 @@ if ("age_group" in data) {
   stmt += "\nAND age_group = ?";
   params.push(data.age_group);
 }
+if ("clicked" in data) {
+  stmt += "\nAND clicked = ?";
+  params.push(data.clicked);
+}
 if ("city" in data) {
   stmt += "\nAND STRCMP (city , ?)=0";
   params.push(data.city);
+}
+if ("from_date" in data) {
+  stmt += "\nAND DATEDIFF(CAST(served_time AS DATE), ?) >= 0";
+  params.push(data.from_date);
+}
+if ("to_date" in data) {
+  stmt += "\nAND DATEDIFF(CAST(served_time AS DATE), ?) <= 0";
+  params.push(data.to_date);
 }
   return new Promise ( (resolve, reject) => {
     con.query(stmt,params,(err,r)=>{ 
