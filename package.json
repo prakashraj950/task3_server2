@@ -1,5 +1,5 @@
 {
-  "name": "server2",
+  "name": "task3_server2",
   "version": "1.0.0",
   "main": "server.js",
   "type": "module",
@@ -17,6 +17,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
+    "esm": "^3.2.25",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
     "mysql": "^2.18.1"

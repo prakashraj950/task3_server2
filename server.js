@@ -1,6 +1,6 @@
-import express from "express";
-import cors from 'cors';
-import dotenv from 'dotenv';
+import express from "express"
+import cors from 'cors'
+import dotenv from 'dotenv'
 import installHandler from './api/api_handler.js'
 dotenv.config()
 
