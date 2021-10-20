@@ -12,6 +12,7 @@ export async function Login(domain_name,password){
         else if (r.length == 1)  resolve({status: "success"});
 
     })
+    con.end()
   })
 }
 
