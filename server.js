@@ -9,7 +9,7 @@ app.use(cors());
 
 installHandler(app)
 
-const port = process.env.API_PORT || 8000
+const port = process.env.PORT || 5000
 
 app.listen(port,()=>{
     console.log(`API server on port ${port}`)

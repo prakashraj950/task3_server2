@@ -8,9 +8,17 @@
     "start": "node server.js",
     "dev": "nodemon server.js"
   },
+  "keywords": [
+    "example",
+    "heroku"
+  ],
   "author": "",
   "license": "ISC",
   "description": "",
+  "engines": {
+    "node": "v16.11.1"
+  },
+
   "devDependencies": {
     "nodemon": "^2.0.7"
   },

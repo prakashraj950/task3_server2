@@ -22,7 +22,9 @@ export default async function installHandler(app){
   
   })
 
-
+app.get('/', async(req,res)=>{
+  res.send('server runnig succesfully')
+})
 app.post('/servedata', async(req,res)=>{
   try{
     console.log(req.body.data);
